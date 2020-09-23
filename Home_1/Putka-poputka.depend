@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1600566562 source:c:\users\“¿Õﬂ\desktop\progs\putka-poputka\main.c
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<string.h>
+
