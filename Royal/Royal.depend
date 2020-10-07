@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1601693801 source:c:\users\“¿Õﬂ\desktop\progs\royal\main.cpp
+	<iostream>
+	<SFML/Graphics.hpp>
+	<conio.h>
+
