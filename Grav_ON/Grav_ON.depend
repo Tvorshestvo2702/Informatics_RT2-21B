@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1602988949 source:c:\users\“¿Õﬂ\desktop\progs\grav_on\main.cpp
+	<iostream>
+	<SFML/Graphics.hpp>
+	<conio.h>
+	<vector>
+
