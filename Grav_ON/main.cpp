@@ -8,9 +8,9 @@ using namespace sf;
 
 int abra;
 
-float rotation (int start, int finish, float base);
-void set_active (int HOUR_activation);
-void reload_activate_connections (int Hi, int reload);
+float rotation(int start, int finish, float base);
+void set_active(int HOUR_activation);
+void reload_activate_connections(int Hi, int reload);
 float length_of_line(int start, int finish);
 void Check_connectivity_funk(int st, int fin, int ot);
 void Menu(int abra);
@@ -27,7 +27,7 @@ public:
     float center_coordinate_x[13];
     float center_coordinate_y[13];
 
-    HEAD *had[13];
+    HEAD* had[13];
 
     HEAD() {
 
@@ -101,13 +101,19 @@ public:
         HEAD_number = activ;
         flag_activ = 1;
     }
-    void activate_connections(HEAD *endHEAD, int number) {
+    void activate_connections(HEAD* endHEAD, int number) {
         had[number] = endHEAD;
     }
 
     void set_connection(int connect) {
         if (had[connect]->flag_activ == 1)
             connection[connect] = 1;
+        else
+            cout << "Wrong activation!" << endl;
+    }
+    void delete_connection(int connect) {
+        if (had[connect]->flag_activ == 1)
+            connection[connect] = 0;
         else
             cout << "Wrong activation!" << endl;
     }
@@ -164,7 +170,7 @@ public:
     }
 };
 
-HEAD *H[13];
+HEAD* H[13];
 HEAD_COLOR HC[13];
 Check_connectivity CC[13];
 int number_of_active_HEADS = 0;
@@ -183,7 +189,7 @@ int main(void)
 float rotation(int start, int finish, float base) {
     float result = 0;
     float delta;
-    delta = (float) abs (start - finish);
+    delta = (float)abs(start - finish);
     if (finish > start)
         result = base + (delta - 1) * 15;
     if (finish < start)
@@ -194,7 +200,7 @@ float rotation(int start, int finish, float base) {
 float length_of_line(int start, int finish) {
     float length_line = 0;
     float delta_1;
-    delta_1 = (float) abs(start - finish);
+    delta_1 = (float)abs(start - finish);
     if (delta_1 > 7)
         length_line = 55 + (11 - delta_1) * 45;
     if (delta_1 < 5)
@@ -235,9 +241,13 @@ void enter_func(int st, int fin) {
     H[st]->set_connection(fin);
 }
 
+void delete_func(int st, int fin) {
+    H[st]->delete_connection(fin);
+}
+
 void Check_connectivity_funk(int st, int fin, int ot) {
     for (int i = st; i <= number_of_active_HEADS; ++i) {
-        if (H[st]->connection[i] == 1){
+        if (H[st]->connection[i] == 1) {
             CC[ot].con[i] = 1;
             if (ot != i)
                 Check_connectivity_funk(i, number_of_active_HEADS, ot);
@@ -248,18 +258,20 @@ void Check_connectivity_funk(int st, int fin, int ot) {
 void Menu(int abra) {
     int flag_menu = 0;
     int flag_1 = 0;
-    while (flag_menu != 6)
+    while (flag_menu != 8)
     {
         system("cls");
         cout << endl << endl;
         cout << "   THIS IS " << endl;
-        cout << "    MENU    " << endl << endl ;
+        cout << "    MENU    " << endl << endl;
         cout << "1. Enter number of active hops" << endl;
         cout << "2. Enter new orient connection" << endl;
         cout << "3. Enter new not orient connection" << endl;
         cout << "4. Display all we have" << endl;
         cout << "5. Check connectionly" << endl;
-        cout << "6. I will be back!" << endl;
+        cout << "6. Delete orient connection" << endl;
+        cout << "7. Delete not orient connection" << endl;
+        cout << "8. I will be back!" << endl;
         cin >> flag_menu;
         cout << endl;
 
@@ -269,16 +281,16 @@ void Menu(int abra) {
             cout << "P.S. Yes, this one loves CLOCKS." << endl;
             cin >> number_of_active_HEADS;
             cout << " Thank you very much!" << endl;
-            if ( (number_of_active_HEADS >= 0) && (number_of_active_HEADS <=12)) {
+            if ((number_of_active_HEADS >= 0) && (number_of_active_HEADS <= 12)) {
                 set_active(number_of_active_HEADS);
                 flag_1 = 1;
                 if (number_of_active_HEADS == 0) {
                     for (int i = 1; i <= 12; ++i) {
-                    for (int j = 1; j <= 12; ++j) {
-                        H[i]->connection[j] = 0;
+                        for (int j = 1; j <= 12; ++j) {
+                            H[i]->connection[j] = 0;
+                        }
                     }
                 }
-            }
             }
             else {
                 cout << "It wants number from 0 to 12" << endl;
@@ -298,10 +310,11 @@ void Menu(int abra) {
                     enter_func(CLOCK_IS_GOIN_ON, WORK_DAY_END);
                 }
                 else {
-                   cout << "Enter finish hop number:" << endl;
-                }}
+                    cout << "Enter finish hop number:" << endl;
+                }
+            }
             else {
-                 cout << "Enter start hop:" << endl;
+                cout << "Enter start hop:" << endl;
             }
         }
 
@@ -316,25 +329,22 @@ void Menu(int abra) {
                 cin >> WORK_DAY_END;
                 if ((WORK_DAY_END <= number_of_active_HEADS) && (WORK_DAY_END > 0)) {
                     if (CLOCK_IS_GOIN_ON != WORK_DAY_END) {
-                    enter_func(CLOCK_IS_GOIN_ON, WORK_DAY_END);
-                    enter_func(WORK_DAY_END, CLOCK_IS_GOIN_ON);
-                }
-                else
-                {
-                    cout << "Mission impossible in this mode!" << endl;
-                }
+                        enter_func(CLOCK_IS_GOIN_ON, WORK_DAY_END);
+                        enter_func(WORK_DAY_END, CLOCK_IS_GOIN_ON);
+                    }
+                    else
+                    {
+                        cout << "Mission impossible in this mode!" << endl;
+                    }
                 }
                 else {
-                        cout << "Enter finish hop number:" << endl;
+                    cout << "Enter finish hop number:" << endl;
                 }
             }
             else {
-                 cout << "Enter start hop:" << endl;
+                cout << "Enter start hop:" << endl;
             }
-            }
-
-
-
+        }
 
         if (flag_menu == 4) {
             system("cls");
@@ -373,8 +383,8 @@ void Menu(int abra) {
                 for (int i = 1; i <= number_of_active_HEADS; ++i) {
                     for (int j = 1; j <= number_of_active_HEADS; ++j) {
                         //lightening loops
-                       if ((i == j) && (H[i]->connection[j] == 1) ){
-                            l[i].setPosition((H[i]->center_coordinate_x[i]-20), (H[i]->center_coordinate_y[i]-20));
+                        if ((i == j) && (H[i]->connection[j] == 1)) {
+                            l[i].setPosition((H[i]->center_coordinate_x[i] - 20), (H[i]->center_coordinate_y[i] - 20));
                             window.draw(l[i]);
                         }
 
@@ -436,10 +446,10 @@ void Menu(int abra) {
                 }
             }
 
-            if ((flag_stay_alone == 0) && (((number_of_active_HEADS -1)*(number_of_active_HEADS - 2))/2) >= summ) {
+            if ((flag_stay_alone == 0) && (((number_of_active_HEADS - 1) * (number_of_active_HEADS - 2)) / 2) >= summ) {
                 cout << "Connect graf " << endl;
             }
-            if ((flag_stay_alone == 0) && (summ >= (number_of_active_HEADS*number_of_active_HEADS - number_of_active_HEADS/2))) {
+            if ((flag_stay_alone == 0) && (summ >= (number_of_active_HEADS * number_of_active_HEADS - number_of_active_HEADS / 2))) {
                 cout << "Full connect graf " << endl;
             }
 
@@ -448,12 +458,61 @@ void Menu(int abra) {
         }
 
         if (flag_menu == 6) {
+            int DELETE_ORIENT_CONNECTION_START = 0;
+            int DELETE_ORIENT_CONNECTION_FINISH = 0;
+            system("cls");
+            cout << "Enter start hop:" << endl;
+            cin >> DELETE_ORIENT_CONNECTION_START;
+            if ((DELETE_ORIENT_CONNECTION_START <= number_of_active_HEADS) && (DELETE_ORIENT_CONNECTION_START > 0)) {
+                cout << "Enter finish hop number:" << endl;
+                cin >> DELETE_ORIENT_CONNECTION_FINISH ;
+                if ((DELETE_ORIENT_CONNECTION_FINISH <= number_of_active_HEADS) && (DELETE_ORIENT_CONNECTION_FINISH > 0)) {
+                    delete_func(DELETE_ORIENT_CONNECTION_START, DELETE_ORIENT_CONNECTION_FINISH);
+                }
+                else {
+                    cout << "Enter finish hop number:" << endl;
+                }
+            }
+            else {
+                cout << "Enter start hop:" << endl;
+            }
+        }
+
+        if (flag_menu == 7) {
+            int DELETE_ORIENT_CONNECTION_START = 0;
+            int DELETE_ORIENT_CONNECTION_FINISH = 0;
+            system("cls");
+            cout << "Enter start hop:" << endl;
+            cin >> DELETE_ORIENT_CONNECTION_START;
+            if ((DELETE_ORIENT_CONNECTION_START <= number_of_active_HEADS) && (DELETE_ORIENT_CONNECTION_START > 0)) {
+                cout << "Enter finish hop number:" << endl;
+                cin >> DELETE_ORIENT_CONNECTION_FINISH;
+                if ((DELETE_ORIENT_CONNECTION_FINISH <= number_of_active_HEADS) && (DELETE_ORIENT_CONNECTION_FINISH > 0)) {
+                    if (DELETE_ORIENT_CONNECTION_START != DELETE_ORIENT_CONNECTION_FINISH) {
+                        delete_func(DELETE_ORIENT_CONNECTION_START, DELETE_ORIENT_CONNECTION_FINISH);
+                        delete_func(DELETE_ORIENT_CONNECTION_FINISH, DELETE_ORIENT_CONNECTION_START);
+                    }
+                    else
+                    {
+                        cout << "Mission impossible in this mode!" << endl;
+                    }
+                }
+                else {
+                    cout << "Enter finish hop number:" << endl;
+                }
+            }
+            else {
+                cout << "Enter start hop:" << endl;
+            }
+        }
+
+        if (flag_menu == 8) {
             system("cls");
             cout << "I will be back!" << endl;
             cout << "                 C TERMINATOR" << endl;
         }
 
-        if ((flag_menu != 1) && (flag_menu != 2) && (flag_menu != 3) && (flag_menu != 4) && (flag_menu != 5) && (flag_menu != 6)) {
+        if ((flag_menu != 1) && (flag_menu != 2) && (flag_menu != 3) && (flag_menu != 4) && (flag_menu != 5) && (flag_menu != 6) && (flag_menu != 7) && (flag_menu != 8)) {
             cout << "Lets try again!!!" << endl;
         }
     }
